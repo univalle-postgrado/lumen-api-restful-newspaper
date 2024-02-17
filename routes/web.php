@@ -17,9 +17,18 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/categories', ['uses' => 'CategoryController@index']);
-$router->get('/categories/{id}', ['uses' => 'CategoryController@read']);
-$router->post('/categories', ['uses' => 'CategoryController@create']);
-$router->put('/categories/{id}', ['uses' => 'CategoryController@update']);
-$router->patch('/categories/{id}', ['uses' => 'CategoryController@patch']);
-$router->delete('/categories/{id}', ['uses' => 'CategoryController@delete']);
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->group(['prefix' => 'v1'], function () use ($router) {
+        $router->get('/categories', ['uses' => 'CategoryController@index']);
+        $router->get('/categories/{id}', ['uses' => 'CategoryController@read']);
+        $router->post('/categories', ['uses' => 'CategoryController@create']);
+        $router->put('/categories/{id}', ['uses' => 'CategoryController@update']);
+        $router->patch('/categories/{id}', ['uses' => 'CategoryController@patch']);
+        $router->delete('/categories/{id}', ['uses' => 'CategoryController@delete']);
+    });
+
+
+    $router->group(['prefix' => 'v2'], function () use ($router) {
+        $router->get('/categories', ['uses' => 'CategoryController@indexV2']);
+    });
+});

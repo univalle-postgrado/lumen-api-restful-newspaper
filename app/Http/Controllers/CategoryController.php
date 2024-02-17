@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+    use ApiResponser;
+
     /**
      * Create a new controller instance.
      *
@@ -21,13 +25,13 @@ class CategoryController extends Controller
     public function index() {
         $categories = Category::select('id', 'title', 'alias', 'position')->orderBy('position', 'ASC')->get();
 
-        return response($categories, 200);
+        return $this->validResponse($categories);
     }
 
     public function read($id) {
         $category = Category::findOrFail($id);
 
-        return response($category, 200);
+        return $this->validResponse($category);
     }
 
     public function create(Request $request) {
@@ -44,7 +48,7 @@ class CategoryController extends Controller
 
         $category = Category::create($data);
 
-        return response($category, 201);
+        return $this->successResponse($category, Response::HTTP_CREATED);
     }
 
     public function update($id, Request $request) {
@@ -71,13 +75,13 @@ class CategoryController extends Controller
             $category->created_by = 'system';
             $category->save();
 
-            return response($category, 201);
+            return $this->successResponse($category, Response::HTTP_CREATED);
         } else {
             $data['updated_by'] = 'system';
             $category->fill($data);
 
             $category->save();
-            return response($category, 200);
+            return $this->successResponse($category, Response::HTTP_OK);
         }
     }
 
@@ -100,12 +104,19 @@ class CategoryController extends Controller
         $category->fill($data);
 
         $category->save();
-        return response($category, 200);
+        return $this->successResponse($category, Response::HTTP_OK);
     }
 
     public function delete($id) {
         $category = Category::findOrFail($id);
         $category->delete();
-        return response($category, 200);
+        return $this->successResponse($category, Response::HTTP_OK);
+    }
+
+
+    public function indexV2() {
+        $categories = Category::select('id', 'title', 'alias', 'position', 'created_at')->orderBy('position', 'ASC')->get();
+
+        return $this->validResponse($categories);
     }
 }
