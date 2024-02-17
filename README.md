@@ -33,8 +33,22 @@ The Lumen framework is open-sourced software licensed under the [MIT license](ht
 php -S localhost:8000 -t public
 ```
 
-### Creación de Migrations
+### Migrations
+
+#### Creación de una tabla
 
 ```
 php artisan make:migration create_categories_table
+```
+
+#### Ejecutar migration
+
+```
+php artisan migrate
+```
+
+#### Hacer rollback de migration
+
+```
+php artisan migrate:rollback
 ```
