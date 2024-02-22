@@ -76,10 +76,41 @@ class ContentController extends Controller
         $data['alias'] = Str::slug($data['title']);
         $data['updated_by'] = 'system';
 
-        $category = Content::find($id);
-        $category->fill($data);
-        $category->save();
-        return $this->successResponse($category, Response::HTTP_OK);
+        $content = Content::find($id);
+        $content->fill($data);
+        $content->save();
+        return $this->successResponse($content, Response::HTTP_OK);
+    }
+
+    public function patch($id, Request $request) {
+        $rules = [
+            'pretitle' => 'max:180',
+            'title' => 'max:180',
+            'author' => 'max:60',
+            'image_url' => 'max:255',
+            'introduction' => 'max:300',
+            'tags' => 'max:300',
+            'format' => 'in:ONLY_TEXT,WITH_IMAGE,WITH_GALLERY,WITH_VIDEO',
+            'featured' => 'boolean',
+            'status' => 'in:WRITING,PUBLISHED,NOT_PUBLISHED,ARCHIVED',
+            'edition_date' => 'integer|min:1',
+            'category_title' => 'max:60',
+            'category_alias' => 'max:60'
+        ];
+        $this->validate($request, $rules);
+
+        $content = Content::findOrFail($id);
+
+        $data = $request->all();
+        if (isset($data['title'])) {
+            $data['alias'] = Str::slug($data['title']);
+        }
+        $data['updated_by'] = 'system';
+
+        $content->fill($data);
+
+        $content->save();
+        return $this->successResponse($content, Response::HTTP_OK);
     }
 
 }
