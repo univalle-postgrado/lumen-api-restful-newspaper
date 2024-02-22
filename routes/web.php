@@ -27,6 +27,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('/categories/{id}', ['uses' => 'CategoryController@delete']);
 
         $router->get('/contents', ['uses' => 'ContentController@index']);
+        $router->get('/contents/{id}', ['uses' => 'ContentController@read']);
         $router->post('/contents', ['uses' => 'ContentController@create']);
         $router->put('/contents/{id}', ['uses' => 'ContentController@update']);
         $router->patch('/contents/{id}', ['uses' => 'ContentController@patch']);

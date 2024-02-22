@@ -27,6 +27,11 @@ class ContentController extends Controller
         return $this->validResponse($contents);
     }
 
+    public function read($id) {
+        $content = Content::findOrFail($id);
+        return $this->validResponse($content);
+    }
+
     public function create(Request $request) {
         $rules = [
             'pretitle' => 'required|max:180',
