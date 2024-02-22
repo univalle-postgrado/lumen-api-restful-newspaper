@@ -118,4 +118,9 @@ class ContentController extends Controller
         return $this->successResponse($content, Response::HTTP_OK);
     }
 
+    public function delete($id) {
+        $content = Content::findOrFail($id);
+        $content->delete();
+        return $this->successResponse($content, Response::HTTP_OK);
+    }
 }
