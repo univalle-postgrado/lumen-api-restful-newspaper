@@ -54,4 +54,32 @@ class ContentController extends Controller
         return $this->successResponse($content, Response::HTTP_CREATED);
     }
 
+    public function update($id, Request $request) {
+        $rules = [
+            'pretitle' => 'required|max:180',
+            'title' => 'required|max:180',
+            'author' => 'required|max:60',
+            'image_url' => 'required|max:255',
+            'introduction' => 'required|max:300',
+            'body' => 'required',
+            'tags' => 'required|max:300',
+            'format' => 'required|in:ONLY_TEXT,WITH_IMAGE,WITH_GALLERY,WITH_VIDEO',
+            'featured' => 'required|boolean',
+            'status' => 'required|in:WRITING,PUBLISHED,NOT_PUBLISHED,ARCHIVED',
+            'edition_date' => 'required|integer|min:1',
+            'category_title' => 'required|max:60',
+            'category_alias' => 'required|max:60'
+        ];
+        $this->validate($request, $rules);
+
+        $data = $request->all();
+        $data['alias'] = Str::slug($data['title']);
+        $data['updated_by'] = 'system';
+
+        $category = Content::find($id);
+        $category->fill($data);
+        $category->save();
+        return $this->successResponse($category, Response::HTTP_OK);
+    }
+
 }
