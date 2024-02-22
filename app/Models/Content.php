@@ -35,4 +35,17 @@ class Content extends Model
         'updated_by'
     ];
 
+    /**
+     * Appends
+     * @var array
+     */
+    protected $appends = [
+        'url',
+    ];
+
+    public function getUrlAttribute()
+    {
+        return '/' . $this->category_alias . '/' . $this->edition_date . '_' .  $this->alias . '.html';
+    }
+
 }
