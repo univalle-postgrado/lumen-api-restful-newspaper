@@ -52,3 +52,9 @@ php artisan migrate
 ```
 php artisan migrate:rollback
 ```
+
+#### Crear Seeder para una tabla
+
+```
+php artisan make:seeder CategorySeeder
+```
