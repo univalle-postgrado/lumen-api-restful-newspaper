@@ -27,6 +27,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('/categories/{id}', ['uses' => 'CategoryController@delete']);
 
         $router->get('/contents', ['uses' => 'ContentController@index']);
+        $router->post('/contents', ['uses' => 'ContentController@create']);
     });
 
 
