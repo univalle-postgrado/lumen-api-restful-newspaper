@@ -87,6 +87,8 @@ class TagController extends Controller
 
     public function delete($id) {
         $tag = Tag::findOrFail($id);
+        // Desasocia los tags antes de borrar el post
+        $tag->contents()->detach();
         $tag->delete();
         return $this->successResponse($tag, Response::HTTP_OK);
     }

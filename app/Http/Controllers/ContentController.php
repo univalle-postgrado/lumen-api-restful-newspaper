@@ -30,6 +30,7 @@ class ContentController extends Controller
 
     public function read($id) {
         $content = Content::findOrFail($id);
+        $content->tags = $content->tags()->select('title', 'alias')->get();
         return $this->validResponse($content);
     }
 
@@ -44,7 +45,8 @@ class ContentController extends Controller
             'format' => 'required|in:ONLY_TEXT,WITH_IMAGE,WITH_GALLERY,WITH_VIDEO',
             'status' => 'required|in:WRITING,PUBLISHED,NOT_PUBLISHED,ARCHIVED',
             'edition_date' => 'required|integer|min:20240101',
-            'category_id' => 'required|integer|exists:categories,id'
+            'category_id' => 'required|integer|exists:categories,id',
+            'tags' => 'required|array'
         ];
         $this->validate($request, $rules);
 
@@ -69,6 +71,10 @@ class ContentController extends Controller
         
         $content = Content::create($data);
 
+        // Asocia los tags al content
+        $tags = $request->input('tags');
+        $content->tags()->attach($tags);
+
         return $this->successResponse($content, Response::HTTP_CREATED);
     }
 
@@ -83,7 +89,8 @@ class ContentController extends Controller
             'format' => 'required|in:ONLY_TEXT,WITH_IMAGE,WITH_GALLERY,WITH_VIDEO',
             'status' => 'required|in:WRITING,PUBLISHED,NOT_PUBLISHED,ARCHIVED',
             'edition_date' => 'required|integer|min:20240101',
-            'category_id' => 'required|integer|exists:categories,id'
+            'category_id' => 'required|integer|exists:categories,id',
+            'tags' => 'required|array'
         ];
         $this->validate($request, $rules);
 
@@ -111,6 +118,11 @@ class ContentController extends Controller
 
         $content->fill($data);
         $content->save();
+
+        // Asocia los tags al content
+        $tags = $request->input('tags');
+        $content->tags()->sync($tags);
+
         return $this->successResponse($content, Response::HTTP_OK);
     }
 
@@ -124,7 +136,8 @@ class ContentController extends Controller
             'format' => 'in:ONLY_TEXT,WITH_IMAGE,WITH_GALLERY,WITH_VIDEO',
             'status' => 'in:WRITING,PUBLISHED,NOT_PUBLISHED,ARCHIVED',
             'edition_date' => 'integer|min:20240101',
-            'category_id' => 'integer|exists:categories,id'
+            'category_id' => 'integer|exists:categories,id',
+            'tags' => 'array'
         ];
         $this->validate($request, $rules);
 
@@ -142,13 +155,21 @@ class ContentController extends Controller
         }
 
         $content->fill($data);
-
         $content->save();
+
+        // Asocia los tags al content
+        $tags = $request->input('tags');
+        $content->tags()->sync($tags);
+
         return $this->successResponse($content, Response::HTTP_OK);
     }
 
     public function delete($id) {
         $content = Content::findOrFail($id);
+
+        // Desasocia los tags antes de borrar el post
+        $content->tags()->detach();
+
         $content->delete();
         return $this->successResponse($content, Response::HTTP_OK);
     }
