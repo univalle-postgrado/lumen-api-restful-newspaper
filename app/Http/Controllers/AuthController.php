@@ -13,7 +13,7 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        return $this->successResponse(['message' => 'Successfully logged out']);
     }
 
     /**
@@ -63,8 +63,18 @@ class AuthController extends Controller
         return $this->successResponse([
             'access_token' => Auth::refresh(),
             'token_type'   => 'bearer',
-            'user'         => Auth::user(),
             'expires_in'   => Auth::factory()->getTTL() * 60 * 24
         ]);
+    }
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        Auth::logout();
+        return $this->successResponse(['message' => 'Successfully logged out']);
     }
 }
