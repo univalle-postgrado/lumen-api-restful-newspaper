@@ -18,7 +18,11 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {
-    $router->group(['prefix' => 'v1', 'middleware' => 'checkAuthorization'], function () use ($router) {
+    $router->group(['prefix' => 'auth'], function () use ($router) {
+        $router->post('login', 'AuthController@login');
+    });
+
+    $router->group(['prefix' => 'v1'], function () use ($router) {
         $router->get('/categories', ['uses' => 'CategoryController@index']);
         $router->get('/categories/{id}', ['uses' => 'CategoryController@read']);
         $router->post('/categories', ['uses' => 'CategoryController@create']);
