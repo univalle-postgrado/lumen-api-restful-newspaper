@@ -58,3 +58,17 @@ php artisan migrate:rollback
 ```
 php artisan make:seeder CategorySeeder
 ```
+
+#### Hacer cambios en la estructura de la BD utilizando migrations
+
+```
+php artisan make:migration add_category_id_to_contents_table --table=contents
+```
+
+```
+php artisan make:migration drop_columns_tags_featured_to_contents_table --table=contents
+```
+
+```
+php artisan make:migration change_columns_pretitle_edition_date_to_contents_table --table=contents
+```
