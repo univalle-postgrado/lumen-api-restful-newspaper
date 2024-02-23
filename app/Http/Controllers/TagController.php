@@ -58,4 +58,24 @@ class TagController extends Controller
         $tag->save();
         return $this->successResponse($tag, Response::HTTP_OK);
     }
+
+    public function patch($id, Request $request) {
+        $rules = [
+            'title' => 'max:60|unique:tags,title,' . $id,
+            'published' => 'boolean'
+        ];
+        $this->validate($request, $rules);
+
+        $content = Tag::findOrFail($id);
+
+        $data = $request->all();
+        if (isset($data['title'])) {
+            $data['alias'] = Str::slug($data['title']);
+        }
+        $data['updated_by'] = 'system';
+
+        $content->fill($data);
+        $content->save();
+        return $this->successResponse($content, Response::HTTP_OK);
+    }
 }
