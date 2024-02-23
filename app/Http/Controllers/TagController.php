@@ -27,6 +27,12 @@ class TagController extends Controller
         return $this->validResponse($contents);
     }
 
+    public function read($id) {
+        $tag = Tag::findOrFail($id);
+
+        return $this->validResponse($tag);
+    }
+
     public function create(Request $request) {
         $rules = [
             'title' => 'required|max:60|unique:tags',

@@ -34,6 +34,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('/contents/{id}', ['uses' => 'ContentController@delete']);
 
         $router->get('/tags', ['uses' => 'TagController@index']);
+        $router->get('/tags/{id}', ['uses' => 'TagController@read']);
         $router->post('/tags', ['uses' => 'TagController@create']);
         $router->put('/tags/{id}', ['uses' => 'TagController@update']);
         $router->patch('/tags/{id}', ['uses' => 'TagController@patch']);
