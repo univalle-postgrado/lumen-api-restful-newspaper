@@ -56,6 +56,16 @@ class ContentController extends Controller
         $data['created_by'] = 'system';
         $data['category_title'] = $category->title;
         $data['category_alias'] = $category->alias;
+
+        // Validamos si el content es único, es decir si no hay otro con el mismo (edition_date, category_alias y alias)
+        $exists = Content::where('edition_date', $data['edition_date'])
+            ->where('category_alias', $category->alias)
+            ->where('alias', $data['alias'])
+            ->exists();
+
+        if ($exists) {
+            return $this->errorResponse('There is Content with the same data (edition_date, category, title)', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
         
         $content = Content::create($data);
 
@@ -87,6 +97,18 @@ class ContentController extends Controller
         $data['category_alias'] = $category->alias;
 
         $content = Content::findOrFail($id);
+
+        // Validamos si el content es único, es decir si no hay otro con el mismo (edition_date, category_alias y alias)
+        $exists = Content::where('edition_date', $data['edition_date'])
+            ->where('category_alias', $category->alias)
+            ->where('alias', $data['alias'])
+            ->where('id', '<>', $id)
+            ->exists();
+
+        if ($exists) {
+            return $this->errorResponse('There is Content with the same data (edition_date, category, title)', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $content->fill($data);
         $content->save();
         return $this->successResponse($content, Response::HTTP_OK);
