@@ -173,4 +173,10 @@ class ContentController extends Controller
         $content->delete();
         return $this->successResponse($content, Response::HTTP_OK);
     }
+
+    public function tags($id) {
+        $content = Content::findOrFail($id);
+        $tags = $content->tags()->select('title', 'alias')->get();
+        return $this->validResponse($tags);
+    }
 }
