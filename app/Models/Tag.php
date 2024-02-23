@@ -18,4 +18,8 @@ class Tag extends Model
         'title', 'alias', 'published', 'created_at', 'updated_at', 'created_by', 'updated_by'
     ];
 
+    public function contents()
+    {
+        return $this->belongsToMany(Content::class);
+    }
 }

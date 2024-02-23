@@ -47,4 +47,14 @@ class Content extends Model
         return '/' . $this->category_alias . '/' . $this->edition_date . '_' .  $this->alias . '.html';
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
 }

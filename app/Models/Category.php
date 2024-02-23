@@ -18,4 +18,9 @@ class Category extends Model
         'title', 'alias', 'position', 'published', 'created_at', 'updated_at', 'created_by', 'updated_by'
     ];
 
+    public function contents()
+    {
+        return $this->hasMany(Content::class);
+    }
+
 }
