@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Content;
+use App\Models\Category;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -34,26 +35,28 @@ class ContentController extends Controller
 
     public function create(Request $request) {
         $rules = [
-            'pretitle' => 'required|max:180',
+            'pretitle' => 'max:180',
             'title' => 'required|max:180',
             'author' => 'required|max:60',
             'image_url' => 'required|max:255',
             'introduction' => 'required|max:300',
             'body' => 'required',
-            'tags' => 'required|max:300',
             'format' => 'required|in:ONLY_TEXT,WITH_IMAGE,WITH_GALLERY,WITH_VIDEO',
-            'featured' => 'required|boolean',
             'status' => 'required|in:WRITING,PUBLISHED,NOT_PUBLISHED,ARCHIVED',
-            'edition_date' => 'required|integer|min:1',
-            'category_title' => 'required|max:60',
-            'category_alias' => 'required|max:60'
+            'edition_date' => 'required|integer|min:20240101',
+            'category_id' => 'required|integer|exists:categories,id'
         ];
         $this->validate($request, $rules);
 
         $data = $request->all();
+
+        $category = Category::select('title', 'alias')->where('id', $data['category_id'])->first();
+
         $data['alias'] = Str::slug($data['title']);
         $data['created_by'] = 'system';
-
+        $data['category_title'] = $category->title;
+        $data['category_alias'] = $category->alias;
+        
         $content = Content::create($data);
 
         return $this->successResponse($content, Response::HTTP_CREATED);
@@ -61,27 +64,29 @@ class ContentController extends Controller
 
     public function update($id, Request $request) {
         $rules = [
-            'pretitle' => 'required|max:180',
+            'pretitle' => 'max:180',
             'title' => 'required|max:180',
             'author' => 'required|max:60',
             'image_url' => 'required|max:255',
             'introduction' => 'required|max:300',
             'body' => 'required',
-            'tags' => 'required|max:300',
             'format' => 'required|in:ONLY_TEXT,WITH_IMAGE,WITH_GALLERY,WITH_VIDEO',
-            'featured' => 'required|boolean',
             'status' => 'required|in:WRITING,PUBLISHED,NOT_PUBLISHED,ARCHIVED',
-            'edition_date' => 'required|integer|min:1',
-            'category_title' => 'required|max:60',
-            'category_alias' => 'required|max:60'
+            'edition_date' => 'required|integer|min:20240101',
+            'category_id' => 'required|integer|exists:categories,id'
         ];
         $this->validate($request, $rules);
 
         $data = $request->all();
+
+        $category = Category::select('title', 'alias')->where('id', $data['category_id'])->first();
+
         $data['alias'] = Str::slug($data['title']);
         $data['updated_by'] = 'system';
+        $data['category_title'] = $category->title;
+        $data['category_alias'] = $category->alias;
 
-        $content = Content::find($id);
+        $content = Content::findOrFail($id);
         $content->fill($data);
         $content->save();
         return $this->successResponse($content, Response::HTTP_OK);
@@ -94,13 +99,10 @@ class ContentController extends Controller
             'author' => 'max:60',
             'image_url' => 'max:255',
             'introduction' => 'max:300',
-            'tags' => 'max:300',
             'format' => 'in:ONLY_TEXT,WITH_IMAGE,WITH_GALLERY,WITH_VIDEO',
-            'featured' => 'boolean',
             'status' => 'in:WRITING,PUBLISHED,NOT_PUBLISHED,ARCHIVED',
-            'edition_date' => 'integer|min:1',
-            'category_title' => 'max:60',
-            'category_alias' => 'max:60'
+            'edition_date' => 'integer|min:20240101',
+            'category_id' => 'integer|exists:categories,id'
         ];
         $this->validate($request, $rules);
 
@@ -111,6 +113,11 @@ class ContentController extends Controller
             $data['alias'] = Str::slug($data['title']);
         }
         $data['updated_by'] = 'system';
+        if (isset($data['category_id'])) {
+            $category = Category::select('title', 'alias')->where('id', $data['category_id'])->first();
+            $data['category_title'] = $category->title;
+            $data['category_alias'] = $category->alias;
+        }
 
         $content->fill($data);
 
