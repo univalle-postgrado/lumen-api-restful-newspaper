@@ -34,6 +34,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('/contents/{id}', ['uses' => 'ContentController@delete']);
 
         $router->get('/tags', ['uses' => 'TagController@index']);
+        $router->post('/tags', ['uses' => 'TagController@create']);
     });
 
 
