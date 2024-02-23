@@ -24,7 +24,7 @@ class ContentController extends Controller
     }
 
     public function index() {
-        $contents = Content::select('id', 'title', 'alias', 'image_url', 'introduction', 'category_title')->orderBy('created_at', 'DESC')->paginate(10);
+        $contents = Content::select('id', 'title', 'alias', 'image_url', 'introduction', 'category_title', 'edition_date', 'category_alias')->orderBy('created_at', 'DESC')->paginate(10);
         return $this->validResponse($contents);
     }
 
