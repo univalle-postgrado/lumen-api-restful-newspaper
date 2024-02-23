@@ -78,4 +78,10 @@ class TagController extends Controller
         $content->save();
         return $this->successResponse($content, Response::HTTP_OK);
     }
+
+    public function delete($id) {
+        $tag = Tag::findOrFail($id);
+        $tag->delete();
+        return $this->successResponse($tag, Response::HTTP_OK);
+    }
 }
