@@ -53,12 +53,6 @@ php artisan migrate
 php artisan migrate:rollback
 ```
 
-#### Crear Seeder para una tabla
-
-```
-php artisan make:seeder CategorySeeder
-```
-
 #### Hacer cambios en la estructura de la BD utilizando migrations
 
 ```
@@ -71,4 +65,20 @@ php artisan make:migration drop_columns_tags_featured_to_contents_table --table=
 
 ```
 php artisan make:migration change_columns_pretitle_edition_date_to_contents_table --table=contents
+```
+
+#### Crear Seeder para una tabla
+
+```
+php artisan make:seeder CategoriesTableSeeder
+```
+
+#### Ejecutar el Seeder a una tabla o a toda la BD
+
+```
+php artisan db:seed --class=ContentsTableSeeder
+```
+
+```
+php artisan db:seed
 ```

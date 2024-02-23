@@ -5,19 +5,18 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Faker\Factory as Faker;
 
-class CategorySeeder extends Seeder
+class CategoriesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // $faker = Faker::create();
-        // $title = $faker->sentence;
+        // Elimina todos los registros existentes en la tabla antes de agregar nuevos datos
+        DB::table('categories')->truncate();
 
-        $categories = ['Local', 'Nacional', 'Internacional', 'Deportes', 'Cultura', 'Economía', 'Seguridad'];
+        $categories = ['Local', 'Nacional', 'Internacional', 'Deportes', 'Cultura', 'Economía', 'Seguridad', 'Política'];
         $i = 0;
         foreach ($categories as $category) {
             $i++;
@@ -29,6 +28,5 @@ class CategorySeeder extends Seeder
                 'created_by' => 'seeder'
             ]);
         }
-        
     }
 }
