@@ -52,4 +52,19 @@ class AuthController extends Controller
     {
         return $this->successResponse(Auth::user());
     }
+
+    /**
+     * Refresh a token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->successResponse([
+            'access_token' => Auth::refresh(),
+            'token_type'   => 'bearer',
+            'user'         => Auth::user(),
+            'expires_in'   => Auth::factory()->getTTL() * 60 * 24
+        ]);
+    }
 }
