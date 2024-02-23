@@ -29,7 +29,7 @@ class TagController extends Controller
 
     public function create(Request $request) {
         $rules = [
-            'title' => 'required|max:60',
+            'title' => 'required|max:60|unique:tags',
             'published' => 'required|boolean'
         ];
         $this->validate($request, $rules);
@@ -41,5 +41,21 @@ class TagController extends Controller
         $content = Tag::create($data);
 
         return $this->successResponse($content, Response::HTTP_CREATED);
+    }
+
+    public function update($id, Request $request) {
+        $rules = [
+            'title' => 'required|max:60|unique:tags,title,' . $id,
+            'published' => 'required|boolean'
+        ];
+        $this->validate($request, $rules);
+
+        $tag = Tag::findOrFail($id);
+
+        $data = $request->all();
+        $data['updated_by'] = 'system';
+        $tag->fill($data);
+        $tag->save();
+        return $this->successResponse($tag, Response::HTTP_OK);
     }
 }

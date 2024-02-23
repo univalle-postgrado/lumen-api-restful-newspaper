@@ -35,6 +35,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
         $router->get('/tags', ['uses' => 'TagController@index']);
         $router->post('/tags', ['uses' => 'TagController@create']);
+        $router->put('/tags/{id}', ['uses' => 'TagController@update']);
     });
 
 
