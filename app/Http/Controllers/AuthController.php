@@ -42,4 +42,14 @@ class AuthController extends Controller
             'expires_in'   => Auth::factory()->getTTL() * 60 * 24
         ]);
     }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        return $this->successResponse(Auth::user());
+    }
 }
