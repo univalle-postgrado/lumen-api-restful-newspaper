@@ -7,6 +7,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -44,7 +45,7 @@ class CategoryController extends Controller
 
         $data = $request->all();
         $data['alias'] = Str::slug($data['title']);
-        $data['created_by'] = 'system';
+        $data['created_by'] = Auth::user()->email;
 
         $category = Category::create($data);
 
@@ -72,12 +73,12 @@ class CategoryController extends Controller
             $category->alias = $data['alias'];
             $category->position = $data['position'];
             $category->published = $data['published'];
-            $category->created_by = 'system';
+            $category->created_by = Auth::user()->email;
             $category->save();
 
             return $this->successResponse($category, Response::HTTP_CREATED);
         } else {
-            $data['updated_by'] = 'system';
+            $data['updated_by'] = Auth::user()->email;
             $category->fill($data);
 
             $category->save();
@@ -99,7 +100,7 @@ class CategoryController extends Controller
         if (isset($data['title'])) {
             $data['alias'] = Str::slug($data['title']);
         }
-        $data['updated_by'] = 'system';
+        $data['updated_by'] = Auth::user()->email;
 
         $category->fill($data);
 
